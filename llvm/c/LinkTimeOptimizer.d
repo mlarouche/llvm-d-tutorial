@@ -1,4 +1,4 @@
-//===-- llvm/LinkTimeOptimizer.h - LTO Public C Interface -------*- D -*-===//
+//===-- llvm/LinkTimeOptimizer.h - LTO Public C Interface -------*- C++ -*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -12,18 +12,26 @@
 // their implementation for performing LTO.
 //
 //===----------------------------------------------------------------------===//
-module llvm.c.LinkTimeOptimizer;
 
+module llvm.c.linktimeoptimizer;
 
-extern(C):
+import llvm.c.core;
 
+extern(C) nothrow:
+
+/**
+ * @defgroup LLVMCLinkTimeOptimizer Link Time Optimization
+ * @ingroup LLVMC
+ *
+ * @{
+ */
 
   /// This provides a dummy type for pointers to the LTO object.
-alias void* llvm_lto_t;
+  alias void* llvm_lto_t;
 
   /// This provides a C-visible enumerator to manage status codes.
   /// This should map exactly onto the C++ enumerator LTOStatus.
-enum llvm_lto_status {
+  enum llvm_lto_status {
     LLVM_LTO_UNKNOWN,
     LLVM_LTO_OPT_SUCCESS,
     LLVM_LTO_READ_SUCCESS,
@@ -37,6 +45,7 @@ enum llvm_lto_status {
     //  Added C-specific error codes
     LLVM_LTO_NULL_OBJECT
   }
+  alias llvm_lto_status llvm_lto_status_t;
  
   /// This provides C interface to initialize link time optimizer. This allows
   /// linker to use dlopen() interface to dynamically load LinkTimeOptimizer.
@@ -44,5 +53,11 @@ enum llvm_lto_status {
   extern llvm_lto_t llvm_create_optimizer();
   extern void llvm_destroy_optimizer(llvm_lto_t lto);
 
-  extern llvm_lto_status llvm_read_object_file(llvm_lto_t lto, /*const*/ char* input_filename);
-  extern llvm_lto_status llvm_optimize_modules(llvm_lto_t lto, /*const*/ char* output_filename);
+  extern llvm_lto_status_t llvm_read_object_file
+    (llvm_lto_t lto, const(char)* input_filename);
+  extern llvm_lto_status_t llvm_optimize_modules
+    (llvm_lto_t lto, const(char)* output_filename);
+
+/**
+ * @}
+ */

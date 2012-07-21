@@ -2,12 +2,12 @@
 /// Converted by Michaël Larouche <michael.larouche@gmail.com> 
 module test.llvmKaleidoscope;
 
-import llvm.c.Analysis;
-import llvm.c.Core;
-import llvm.c.ExecutionEngine;
-import llvm.c.Initialization;
-import llvm.c.transforms.Scalar;
-import llvm.c.Target;
+import llvm.c.analysis;
+import llvm.c.core;
+import llvm.c.executionengine;
+import llvm.c.initialization;
+import llvm.c.transforms.scalar;
+import llvm.c.target;
 import std.ascii;
 import std.conv;
 import std.stdio;
@@ -278,7 +278,7 @@ public:
 			case '/':
 				return LLVMBuildFDiv(Builder, l, r, "divtmp");
 			case '<':
-				l = LLVMBuildFCmp(Builder, LLVMRealPredicate.ULT, l, r, "cmp");
+				l = LLVMBuildFCmp(Builder, LLVMRealPredicate.LLVMRealULT, l, r, "cmp");
 				// Convert bool 0/1 to double 0.0 or 1.0
 				return LLVMBuildUIToFP(Builder, l, LLVMDoubleType(), "booltmp");
 		
@@ -493,7 +493,7 @@ public:
 			LLVMBuildRet(Builder, returnValue);
 			
 			// Valide the generated code, checking for consistency.
-			LLVMVerifyFunction(theFunction, LLVMVerifierFailureAction.PrintMessage);
+			LLVMVerifyFunction(theFunction, LLVMVerifierFailureAction.LLVMPrintMessageAction);
 			
 			// Optimize the function.
 			LLVMRunFunctionPassManager(TheFPM, theFunction);
@@ -538,7 +538,7 @@ public:
 		}
 		
 		// Convert condition to a bool by comparing equal to 0.0.
-		condV = LLVMBuildFCmp(Builder, LLVMRealPredicate.ONE, condV, LLVMConstReal(LLVMDoubleType(), 0.0), "ifcond");
+		condV = LLVMBuildFCmp(Builder, LLVMRealPredicate.LLVMRealONE, condV, LLVMConstReal(LLVMDoubleType(), 0.0), "ifcond");
 		
 		auto theFunction = LLVMGetBasicBlockParent(LLVMGetInsertBlock(Builder));
 		
@@ -706,7 +706,7 @@ public:
 		LLVMBuildStore(Builder, nextVar, alloca);
 		
 		// Convert condition to a bool by comparing equal to 0.0.
-		endCond = LLVMBuildFCmp(Builder, LLVMRealPredicate.ONE, endCond, LLVMConstReal(LLVMDoubleType(), 0.0), "loopcond");
+		endCond = LLVMBuildFCmp(Builder, LLVMRealPredicate.LLVMRealONE, endCond, LLVMConstReal(LLVMDoubleType(), 0.0), "loopcond");
 		
 		// Create the "after loop" block and insert it.
 		auto afterBB = LLVMAppendBasicBlock(theFunction, "afterloop");

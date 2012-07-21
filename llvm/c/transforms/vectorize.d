@@ -1,4 +1,5 @@
-/*===-- llvm-c/BitWriter.h - BitWriter Library C Interface ------*- C++ -*-===*\
+/*===---------------------------Vectorize.h --------------------- -*- C -*-===*\
+|*===----------- Vectorization Transformation Library C Interface ---------===*|
 |*                                                                            *|
 |*                     The LLVM Compiler Infrastructure                       *|
 |*                                                                            *|
@@ -7,8 +8,8 @@
 |*                                                                            *|
 |*===----------------------------------------------------------------------===*|
 |*                                                                            *|
-|* This header declares the C interface to libLLVMBitWriter.a, which          *|
-|* implements output of the LLVM bitcode format.                              *|
+|* This header declares the C interface to libLLVMVectorize.a, which          *|
+|* implements various vectorization transformations of the LLVM IR.           *|
 |*                                                                            *|
 |* Many exotic languages can interoperate with C code but have a harder time  *|
 |* with C++ due to name mangling. So in addition to C, this interface enables *|
@@ -16,31 +17,21 @@
 |*                                                                            *|
 \*===----------------------------------------------------------------------===*/
 
-module llvm.c.bitwriter;
+module llvm.c.transforms.vectorize;
 
 import llvm.c.core;
 
 extern(C) nothrow:
 
 /**
- * @defgroup LLVMCBitWriter Bit Writer
- * @ingroup LLVMC
+ * @defgroup LLVMCTransformsVectorize Vectorization transformations
+ * @ingroup LLVMCTransforms
  *
  * @{
  */
 
-/*===-- Operations on modules ---------------------------------------------===*/
-
-/** Writes a module to the specified path. Returns 0 on success. */ 
-int LLVMWriteBitcodeToFile(LLVMModuleRef M, const(char) *Path);
-
-/** Writes a module to an open file descriptor. Returns 0 on success. */
-int LLVMWriteBitcodeToFD(LLVMModuleRef M, int FD, int ShouldClose,
-                         int Unbuffered);
-
-/** Deprecated for LLVMWriteBitcodeToFD. Writes a module to an open file
-    descriptor. Returns 0 on success. Closes the Handle. */ 
-int LLVMWriteBitcodeToFileHandle(LLVMModuleRef M, int Handle);
+/** See llvm::createBBVectorizePass function. */
+void LLVMAddBBVectorizePass(LLVMPassManagerRef PM);
 
 /**
  * @}
